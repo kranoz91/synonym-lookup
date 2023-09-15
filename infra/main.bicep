@@ -62,6 +62,21 @@ module apim './core/gateway/apim.bicep' = {
   }
 }
 
+module apimApi './app/apim-api.bicep' = {
+  name: 'apim-api-deployment'
+  scope: rg
+  params: {
+    name: apim.outputs.apimServiceName
+    apiName: 'synonym-lookup-api'
+    apiDisplayName: 'Synonym Lookup API'
+    apiDescription: 'CRUD for words and their synonyms'
+    apiPath: 'words'
+    webFrontendUrl: staticWebApp.outputs.uri
+    apiBackendUrl: 'https://placeholder.com'
+    apiAppName: 'placeholder'
+  }
+}
+
 // Add outputs from the deployment here, if needed.
 //
 // This allows the outputs to be referenced by other bicep deployments in the deployment pipeline,
