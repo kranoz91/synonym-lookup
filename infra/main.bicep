@@ -73,7 +73,6 @@ module apimApi './app/apim-api.bicep' = {
     apiPath: 'words'
     webFrontendUrl: staticWebApp.outputs.uri
     apiBackendUrl: 'https://placeholder.com'
-    apiAppName: 'placeholder'
   }
 }
 
