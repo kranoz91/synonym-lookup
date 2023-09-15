@@ -14,11 +14,30 @@ function App() {
     setSearchString(event.target.value);
   }
 
-  const [onClickSearchString, setOnClickSearchString] = useState('');
+  const [synonyms, setSynonyms] = useState(['']);
+
+  function search(): Promise<string[]> {
+    const headers: Headers = new Headers()
+
+    headers.set('Content-Type', 'application/json')
+    headers.set('Accept', 'application/json')
+
+    const request: RequestInfo = new Request('https://apim-synonym-lookup-dev.azure-api.net/words/v1/words/' + searchString + '/synonyms', {
+      method: 'GET',
+      headers: headers
+    })
+
+    return fetch(request)
+      .then(res => res.json())
+      .then(res => res as string[])
+  }
 
   const handleSearch = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    setOnClickSearchString(searchString);
+    search()
+      .then(synonyms => {
+        setSynonyms(synonyms);
+      })
   }
 
   const defaultTheme = createTheme();
@@ -41,7 +60,7 @@ function App() {
             <Grid item xs={12} md={8} lg={9}>
               <Paper sx={{ p: 2, height: 240 }}>
                 <SearchBar HandleChange={handleChange} HandleSearch={handleSearch}/>
-                <Typography>{onClickSearchString}</Typography>
+                <Typography>{JSON.stringify(synonyms)}</Typography>
               </Paper>
             </Grid>
           </Grid>
