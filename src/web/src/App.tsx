@@ -1,25 +1,31 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Typography from '@mui/material/Typography';
+import { Container } from '@mui/material';
+import { useState } from 'react';
+import { SearchBar } from './components/search/SearchBar';
+
+
 
 function App() {
+  const [searchString, setSearchString] = useState('');
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchString(event.target.value);
+  }
+
+  const [onClickSearchString, setOnClickSearchString] = useState('');
+
+  const handleSearch = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setOnClickSearchString(searchString);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <SearchBar HandleChange={handleChange} HandleSearch={handleSearch}/>
+      <Typography>{onClickSearchString}</Typography>
+    </Container>
   );
 }
 
