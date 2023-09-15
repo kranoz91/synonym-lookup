@@ -6,6 +6,7 @@
         <cors allow-credentials="false">
             <allowed-origins>
                 <origin>{origin}</origin>
+                <origin>http://localhost:3000/</origin>
             </allowed-origins>
             <allowed-methods>
                 <method>PUT</method>
