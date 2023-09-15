@@ -1,0 +1,60 @@
+openapi: 3.0.3
+info:
+  description: Synonym Lookup API
+  version: 3.0.3
+  title: Synonym Lookup API
+  contact:
+    email: martineriksson91@hotmail.se
+
+components:
+  parameters:
+    searchString:
+      in: query
+      required: true
+      name: searchString
+      description: Search string to match with words
+      schema:
+        type: string
+    word:
+      in: path
+      required: true
+      name: word
+      description: Used to operate on related synonyms
+      schema:
+        type: string
+
+paths:
+  /v1/words:
+    get:
+      operationId: GetWords
+      summary: Gets an array of matching words
+      tags:
+        - Words V1
+      parameters:
+        - $ref: "#/components/parameters/searchString"
+      responses:
+        200:
+          description: List of words matching input search string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /v1/words/{word}/synonyms:
+    get:
+      operationId: GetSynonyms
+      summary: Gets synonyms related to input word
+      tags:
+        - Synonyms V1
+      parameters:
+        - $ref: "#/components/parameters/word"
+      responses:
+        200:
+          description: List of synonyms related to input word
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
