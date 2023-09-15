@@ -21,7 +21,6 @@ var serviceName = 'synonym-lookup'
 // tags that should be applied to all resources.
 var tags = {
   'azd-env-name': environmentName
-  'azd-service-name': serviceName
 }
 
 // Organize resources in a resource group
@@ -37,7 +36,7 @@ module staticWebApp 'core/host/staticwebapp.bicep' = {
   params: {
     name: '${abbrs.webStaticSites}${serviceName}-${environmentName}'
     location: location
-    tags: tags
+    tags: union(tags, { 'azd-service-name': '${abbrs.webStaticSites}${serviceName}'})
   }
 }
 
