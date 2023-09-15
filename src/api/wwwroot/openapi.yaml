@@ -41,6 +41,7 @@ paths:
                 type: array
                 items:
                   type: string
+                example: ["Honey", "Money", "One"]
   /v1/words/{word}/synonyms:
     get:
       operationId: GetSynonyms
@@ -58,3 +59,4 @@ paths:
                 type: array
                 items:
                   type: string
+                example: ["Warm", "Hot", "Temperate"]
