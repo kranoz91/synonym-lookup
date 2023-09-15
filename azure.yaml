@@ -23,7 +23,7 @@ services:
   #   host: appservice
   ## An example for a React front-end app.
   ## The src/react-app/build folder is where the app is built to after `npm run build`.
-  synonym-lookup-web:
+  stapp-synonym-lookup:
     language: ts
     project: ./src/web
     host: staticwebapp
