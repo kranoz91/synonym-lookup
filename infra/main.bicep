@@ -13,22 +13,10 @@ param environmentName string
 @description('Primary location for all resources')
 param location string
 
-// Optional parameters to override the default azd resource naming conventions.
-// Add the following to main.parameters.json to provide values:
-// "resourceGroupName": {
-//      "value": "myGroupName"
-// }
-param resourceGroupName string = ''
-
 var abbrs = loadJsonContent('./abbreviations.json')
 
-// Generate a unique token to be used in naming resources.
-// Remove linter suppression after using.
-#disable-next-line no-unused-vars
-var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
-
 // Name of the service defined in azure.yaml
-var serviceName = 'synonym-lookup-web'
+var serviceName = 'synonym-lookup'
 
 // tags that should be applied to all resources.
 var tags = {
@@ -38,7 +26,7 @@ var tags = {
 
 // Organize resources in a resource group
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
-  name: !empty(resourceGroupName) ? resourceGroupName : '${abbrs.resourcesResourceGroups}${serviceName}-${environmentName}'
+  name: '${abbrs.resourcesResourceGroups}${serviceName}-${environmentName}'
   location: location
   tags: tags
 }
@@ -50,6 +38,28 @@ module staticWebApp 'core/host/staticwebapp.bicep' = {
     name: '${abbrs.webStaticSites}${serviceName}-${environmentName}'
     location: location
     tags: tags
+  }
+}
+
+module monitoring './core/monitor/monitoring.bicep' = {
+  name: 'monitoring'
+  scope: rg
+  params: {
+    location: location
+    tags: tags
+    logAnalyticsName: '${abbrs.operationalInsightsWorkspaces}${serviceName}-${environmentName}'
+    applicationInsightsName: '${abbrs.insightsComponents}${serviceName}-${environmentName}'
+  }
+}
+
+module apim './core/gateway/apim.bicep' = {
+  name: 'apim-deployment'
+  scope: rg
+  params: {
+    name: '${abbrs.apiManagementService}${serviceName}-${environmentName}'
+    location: location
+    tags: tags
+    applicationInsightsName: monitoring.outputs.applicationInsightsName
   }
 }
 
