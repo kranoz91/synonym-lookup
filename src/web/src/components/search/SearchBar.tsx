@@ -21,14 +21,12 @@ const Search = styled('div')(({ theme }) => ({
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
     height: '100%',
     position: 'absolute',
-    pointerEvents: 'none',
     display: '-webkit-inline-box',
     alignItems: 'center',
     justifyContent: 'center',
-  }));
+}));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
     color: 'inherit',
@@ -57,9 +55,9 @@ export const SearchBar = (Props: SearchBarProps) => {
                 placeholder="Search…"
                 inputProps={{ 'aria-label': 'search', onChange: Props.HandleChange }}
                 />
-                <Button type="submit" onClick={Props.HandleSearch}>
+                <Button type="submit" onClick={Props.HandleSearch} sx={{height: 39}}>
                     <SearchIconWrapper>
-                    <SearchIcon />
+                        <SearchIcon />
                     </SearchIconWrapper>
                 </Button>
             </Search>
