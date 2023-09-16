@@ -1,0 +1,43 @@
+import Box from '@mui/material/Box';
+import { ThemeProvider, createTheme } from '@mui/material';
+
+export interface PageLayoutProps {
+    children?: React.ReactNode
+}
+
+export const PageLayout = (Props: PageLayoutProps) => {
+    /**
+     * Most applications will need to conditionally render certain components based on whether a user is signed in or not.
+     * msal-react provides 2 easy ways to do this. AuthenticatedTemplate and UnauthenticatedTemplate components will
+     * only render their children if a user is authenticated or unauthenticated, respectively.
+     */
+    
+    const defaultTheme = createTheme();
+
+    return (
+        <>
+            <ThemeProvider theme={defaultTheme}>
+                <Box
+                    component="main"
+                    sx={{
+                    backgroundColor: (theme) =>
+                        theme.palette.mode === 'light'
+                        ? theme.palette.grey[100]
+                        : theme.palette.grey[900],
+                    flexGrow: 1,
+                    height: '100vh',
+                    overflow: 'auto',
+                    }}
+                >
+                    <br />
+                    <h5>
+                        <center>Welcome to the Microsoft Authentication Library For React Tutorial</center>
+                    </h5>
+                    <br />
+                    {Props.children}
+                    <br />
+                </Box>
+            </ThemeProvider>   
+        </>
+    );
+}

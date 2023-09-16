@@ -1,13 +1,19 @@
 import React from 'react';
 import './App.css';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import { Grid, ThemeProvider, createTheme } from '@mui/material';
+import { Grid } from '@mui/material';
 import { useState } from 'react';
 import { SearchBar } from './components/search/SearchBar';
 import { Paper } from '@mui/material';
+import { MsalProvider, AuthenticatedTemplate, useMsal, UnauthenticatedTemplate } from '@azure/msal-react';
+import { IPublicClientApplication } from '@azure/msal-browser';
+import { PageLayout } from './components/layout/PageLayout';
+import { Login } from './components/login/Login';
 
-function App() {
+const MainContent = () => {
+  const {instance} = useMsal();
+  const activeAccount = instance.getActiveAccount();
+
   const [searchString, setSearchString] = useState('');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,32 +46,36 @@ function App() {
       })
   }
 
-  const defaultTheme = createTheme();
-
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Box
-        component="main"
-        sx={{
-          backgroundColor: (theme) =>
-            theme.palette.mode === 'light'
-              ? theme.palette.grey[100]
-              : theme.palette.grey[900],
-          flexGrow: 1,
-          height: '100vh',
-          overflow: 'auto',
-        }}
-      >
-          <Grid container spacing={3} sx={{ mt: 4, mb: 4, flexDirection: 'column', alignContent: 'center' }}>
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper sx={{ p: 2, height: 240 }}>
-                <SearchBar HandleChange={handleChange} HandleSearch={handleSearch}/>
-                <Typography>{JSON.stringify(synonyms)}</Typography>
-              </Paper>
-            </Grid>
+    <div className="App">
+      <AuthenticatedTemplate>
+        <Grid container spacing={3} sx={{ mt: 4, mb: 4, flexDirection: 'column', alignContent: 'center' }}>
+          <Grid item xs={12} md={8} lg={9}>
+            <Paper sx={{ p: 2, height: 240 }}>
+              <SearchBar HandleChange={handleChange} HandleSearch={handleSearch}/>
+              <Typography>{JSON.stringify(synonyms)}</Typography>
+            </Paper>
           </Grid>
-      </Box>
-    </ThemeProvider>
+        </Grid>
+      </AuthenticatedTemplate>
+      <UnauthenticatedTemplate>
+        <Login />
+      </UnauthenticatedTemplate>
+    </div>
+  )
+}
+
+interface AppProps {
+  Instance: IPublicClientApplication
+}
+
+const App = (Props: AppProps) => {
+  return (
+    <MsalProvider instance={Props.Instance}>
+      <PageLayout>
+        <MainContent />
+      </PageLayout>
+    </MsalProvider>
   );
 }
 
