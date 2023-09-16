@@ -1,18 +1,17 @@
 import React from 'react';
-import './App.css';
+import './styles/App.css';
 import Typography from '@mui/material/Typography';
-import { Grid } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 import { useState } from 'react';
 import { SearchBar } from './components/search/SearchBar';
 import { Paper } from '@mui/material';
 import { MsalProvider, AuthenticatedTemplate, useMsal, UnauthenticatedTemplate } from '@azure/msal-react';
 import { IPublicClientApplication } from '@azure/msal-browser';
 import { PageLayout } from './components/layout/PageLayout';
-import { Login } from './components/login/Login';
+import { CreateWord } from './components/admin/CreateWord';
 
 const MainContent = () => {
   const {instance} = useMsal();
-  const activeAccount = instance.getActiveAccount();
 
   const [searchString, setSearchString] = useState('');
 
@@ -47,21 +46,31 @@ const MainContent = () => {
   }
 
   return (
-    <div className="App">
-      <AuthenticatedTemplate>
-        <Grid container spacing={3} sx={{ mt: 4, mb: 4, flexDirection: 'column', alignContent: 'center' }}>
-          <Grid item xs={12} md={8} lg={9}>
+    <Container className="App" sx={{ mt: 4, mb: 4 }}>
+      <Grid container maxWidth="lg" spacing={3}>
+        <AuthenticatedTemplate>
+          <Grid item xs={12} md={6} lg={6}>
+            <Paper sx={{ p: 2, height: 240 }}>
+              <CreateWord />
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={6} lg={6}>
             <Paper sx={{ p: 2, height: 240 }}>
               <SearchBar HandleChange={handleChange} HandleSearch={handleSearch}/>
               <Typography>{JSON.stringify(synonyms)}</Typography>
             </Paper>
           </Grid>
-        </Grid>
-      </AuthenticatedTemplate>
-      <UnauthenticatedTemplate>
-        <Login />
-      </UnauthenticatedTemplate>
-    </div>
+        </AuthenticatedTemplate>
+        <UnauthenticatedTemplate>
+        <Grid item xs={12} md={12} lg={12}>
+            <Paper sx={{ p: 2, height: 240 }}>
+              <SearchBar HandleChange={handleChange} HandleSearch={handleSearch}/>
+              <Typography>{JSON.stringify(synonyms)}</Typography>
+            </Paper>
+          </Grid>
+        </UnauthenticatedTemplate>
+      </Grid>
+    </Container>
   )
 }
 

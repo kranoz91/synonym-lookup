@@ -1,14 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { PublicClientApplication, EventType, AuthenticationResult } from '@azure/msal-browser';
+import { msalConfig } from './authConfig';
+
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { PublicClientApplication, EventType, AuthenticationResult } from '@azure/msal-browser';
-import { msalConfig } from './authConfig';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/index.css';
 
 /**
  * MSAL should be instantiated outside of the component tree to prevent it from being re-instantiated on re-renders.

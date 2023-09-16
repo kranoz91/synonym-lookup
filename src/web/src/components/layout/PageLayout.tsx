@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
 import { ThemeProvider, createTheme } from '@mui/material';
+import { NavigationBar } from '../navigation/NavigationBar';
 
 export interface PageLayoutProps {
     children?: React.ReactNode
@@ -17,6 +18,7 @@ export const PageLayout = (Props: PageLayoutProps) => {
     return (
         <>
             <ThemeProvider theme={defaultTheme}>
+                <NavigationBar />
                 <Box
                     component="main"
                     sx={{
@@ -29,15 +31,9 @@ export const PageLayout = (Props: PageLayoutProps) => {
                     overflow: 'auto',
                     }}
                 >
-                    <br />
-                    <h5>
-                        <center>Welcome to the Microsoft Authentication Library For React Tutorial</center>
-                    </h5>
-                    <br />
                     {Props.children}
-                    <br />
                 </Box>
-            </ThemeProvider>   
+            </ThemeProvider>
         </>
     );
 }
