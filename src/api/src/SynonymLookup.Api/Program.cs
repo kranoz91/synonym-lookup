@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using SynonymLookup.Api.Extensions;
-using SynonymLookup.Api.Features.WeatherForecast;
+using SynonymLookup.Api.Features.SynonymReader;
+using SynonymLookup.Api.Features.SynonymWriter;
+using SynonymLookup.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +18,9 @@ if (!string.IsNullOrEmpty(appConfigUri))
         builder.Environment.EnvironmentName);
 }
 
-builder.BindWeatherConfiguration();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
+
+builder.Services.RegisterDatabase();
 
 // Add services to the container.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -37,7 +41,7 @@ builder.Services.AddSwaggerGen(opt =>
             {
                 AuthorizationUrl = new Uri($"https://login.microsoftonline.com/{builder.Configuration["AzureAd:TenantId"]}/oauth2/v2.0/authorize"),
                 TokenUrl = new Uri($"https://login.microsoftonline.com/{builder.Configuration["AzureAd:TenantId"]}/oauth2/v2.0/token"),
-                Scopes = new Dictionary<string, string> { { builder.Configuration["AzureAd:Scopes"], "Default access" } }
+                Scopes = new Dictionary<string, string> { { builder.Configuration["AzureAd:Scopes"]!, "Default access" } }
             }
         }
     });
@@ -70,8 +74,7 @@ app.UseSwaggerUI(opt =>
 
 app.UseHttpsRedirection();
 
-var requiredScope = "access_as_user";
-
-app.MapWeatherForecast(requiredScope);
+app.MapSynonymReader();
+app.MapSynonymWriter();
 
 app.Run();
