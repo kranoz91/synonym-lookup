@@ -8,7 +8,7 @@ interface Word {
 }
 
 export interface CreateWordProps {
-    LocationCallback: (location: string) => void
+    Callback: (synonyms: string[]) => void
 }
 
 export const CreateWord = (Props: CreateWordProps) => {
@@ -37,9 +37,30 @@ export const CreateWord = (Props: CreateWordProps) => {
         };
 
         create(wordToCreate)
-          .then(location => {
-            Props.LocationCallback(location);
-          })
+            .then(location => {
+                if (location !== "") {
+                    searchWithLocation(location)
+                        .then(synonyms => {
+                            Props.Callback(synonyms);
+                        });
+                }
+            })
+    }
+
+    function searchWithLocation(location: string) : Promise<string[]> {
+        const headers: Headers = new Headers()
+    
+        headers.set('Content-Type', 'application/json')
+        headers.set('Accept', 'application/json')
+    
+        const request: RequestInfo = new Request('https://apim-synonym-lookup-dev.azure-api.net/words' + location, {
+          method: 'GET',
+          headers: headers
+        })
+    
+        return fetch(request)
+          .then(res => res.json())
+          .then(res => res as string[])
     }
 
     var [word, setWord] = useState("");
