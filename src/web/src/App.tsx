@@ -5,14 +5,12 @@ import { Container, Grid } from '@mui/material';
 import { useState } from 'react';
 import { SearchBar } from './components/search/SearchBar';
 import { Paper } from '@mui/material';
-import { MsalProvider, AuthenticatedTemplate, useMsal, UnauthenticatedTemplate } from '@azure/msal-react';
+import { MsalProvider, AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-react';
 import { IPublicClientApplication } from '@azure/msal-browser';
 import { PageLayout } from './components/layout/PageLayout';
 import { CreateWord } from './components/admin/CreateWord';
 
 const MainContent = () => {
-  const {instance} = useMsal();
-
   const [searchString, setSearchString] = useState('');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
