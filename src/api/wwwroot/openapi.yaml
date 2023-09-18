@@ -8,13 +8,6 @@ info:
 
 components:
   parameters:
-    searchString:
-      in: query
-      required: true
-      name: searchString
-      description: Search string to match with words
-      schema:
-        type: string
     word:
       in: path
       required: true
@@ -22,26 +15,31 @@ components:
       description: Used to operate on related synonyms
       schema:
         type: string
-
+  schemas:
+    createWord:
+      type: object
+      properties:
+        value:
+          type: string
+        synonyms:
+          type: array
+          items:
+            type: string
 paths:
   /v1/words:
-    get:
-      operationId: GetWords
-      summary: Gets an array of matching words
+    post:
+      operationId: PostWord
+      summary: Creates a new word with synonyms or adds to existing word
       tags:
         - Words V1
-      parameters:
-        - $ref: "#/components/parameters/searchString"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createWord"
       responses:
-        200:
-          description: List of words matching input search string
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-                example: ["Honey", "Money", "One"]
+        201:
+          description: Created result with Location header
   /v1/words/{word}/synonyms:
     get:
       operationId: GetSynonyms
