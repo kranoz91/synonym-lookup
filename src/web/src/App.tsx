@@ -43,17 +43,42 @@ const MainContent = () => {
       })
   }
 
+  const locationCallback = (location: string) => {
+    if (location !== "") {
+      searchWithLocation(location)
+        .then(synonyms => {
+          setSynonyms(synonyms);
+        })
+    }
+  }
+
+  function searchWithLocation(location: string) : Promise<string[]> {
+    const headers: Headers = new Headers()
+
+    headers.set('Content-Type', 'application/json')
+    headers.set('Accept', 'application/json')
+
+    const request: RequestInfo = new Request('https://apim-synonym-lookup-dev.azure-api.net/words' + location, {
+      method: 'GET',
+      headers: headers
+    })
+
+    return fetch(request)
+      .then(res => res.json())
+      .then(res => res as string[])
+  }
+
   return (
     <Container className="App" sx={{ mt: 4, mb: 4 }}>
       <Grid container maxWidth="lg" spacing={3}>
         <AuthenticatedTemplate>
           <Grid item xs={12} md={6} lg={6}>
-            <Paper sx={{ p: 2, height: 240 }}>
-              <CreateWord />
+            <Paper sx={{ p: 2 }}>
+              <CreateWord LocationCallback={locationCallback}/>
             </Paper>
           </Grid>
           <Grid item xs={12} md={6} lg={6}>
-            <Paper sx={{ p: 2, height: 240 }}>
+            <Paper sx={{ p: 2 }}>
               <SearchBar HandleChange={handleChange} HandleSearch={handleSearch}/>
               <Typography>{JSON.stringify(synonyms)}</Typography>
             </Paper>
@@ -61,7 +86,7 @@ const MainContent = () => {
         </AuthenticatedTemplate>
         <UnauthenticatedTemplate>
         <Grid item xs={12} md={12} lg={12}>
-            <Paper sx={{ p: 2, height: 240 }}>
+            <Paper sx={{ p: 2, height: "80%" }}>
               <SearchBar HandleChange={handleChange} HandleSearch={handleSearch}/>
               <Typography>{JSON.stringify(synonyms)}</Typography>
             </Paper>
