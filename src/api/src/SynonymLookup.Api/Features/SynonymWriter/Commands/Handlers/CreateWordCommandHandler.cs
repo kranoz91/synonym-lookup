@@ -45,7 +45,7 @@ internal class CreateWordCommandHandler :
             }
         }
 
-        var distinctGroupIds = groupIds.Distinct();
+        var distinctGroupIds = groupIds.Distinct(StringComparer.OrdinalIgnoreCase);
         var newGroup = new List<string>(newWords);
 
         foreach (var groupId in distinctGroupIds)
@@ -53,7 +53,7 @@ internal class CreateWordCommandHandler :
             newGroup.AddRange(reader.GetSynonymGroup(groupId));
         }
 
-        var result = writer.CreateNewGroup(newGroup.Distinct(), distinctGroupIds);
+        var result = writer.CreateNewGroup(newGroup.Distinct(StringComparer.OrdinalIgnoreCase), distinctGroupIds);
 
         return Task.FromResult(result);
     }

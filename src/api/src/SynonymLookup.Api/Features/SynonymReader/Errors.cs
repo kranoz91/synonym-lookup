@@ -35,7 +35,7 @@ internal static class Errors
 
     internal static IResult ResolveError(Result result)
     {
-        var error = PredefinedErrors[result.Code];
+        var error = PredefinedErrors.GetValueOrDefault(result.Code);
         if (error == null)
         {
             return Results.Problem(PredefinedErrorRegister.Fallback);

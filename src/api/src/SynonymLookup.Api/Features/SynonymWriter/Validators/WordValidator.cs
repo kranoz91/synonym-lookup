@@ -11,8 +11,10 @@ internal class WordValidator : AbstractValidator<Word>
 
 	public WordValidator()
 	{
-		RuleFor(_ => _.Value).NotEmpty().WithErrorCode(nameof(Errors.SL201));
-		RuleFor(_ => _.Value).MaximumLength(MAX_LENGTH).WithErrorCode(nameof(Errors.SL202));
-		RuleFor(_ => _.Value).Matches("[a-zA-Z]+").WithErrorCode(nameof(Errors.SL203));
+		RuleFor(_ => _.Value)
+			.Cascade(CascadeMode.Stop)
+			.NotEmpty().WithErrorCode(nameof(Errors.SL201))
+			.MaximumLength(MAX_LENGTH).WithErrorCode(nameof(Errors.SL202))
+			.Matches("^[a-öA-Ö]+$").WithErrorCode(nameof(Errors.SL203));
 	}
 }

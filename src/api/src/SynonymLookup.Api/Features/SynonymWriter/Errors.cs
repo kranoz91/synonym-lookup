@@ -41,7 +41,7 @@ internal static class Errors
 
     internal static IResult ResolveError(Result result)
     {
-        var error = PredefinedErrors[result.Code];
+        var error = PredefinedErrors.GetValueOrDefault(result.Code);
         if (error == null)
         {
             return Results.Problem(PredefinedErrorRegister.Fallback);
@@ -52,7 +52,7 @@ internal static class Errors
 
     internal static IResult ResolveError(ValidationResult result)
     {
-        var error = PredefinedErrors[result.Errors.FirstOrDefault()?.ErrorCode ?? string.Empty];
+        var error = PredefinedErrors.GetValueOrDefault(result.Errors.FirstOrDefault()?.ErrorCode);
         if (error == null)
         {
             return Results.Problem(PredefinedErrorRegister.Fallback);
