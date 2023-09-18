@@ -1,4 +1,4 @@
-import { Container, Grid, List, ListItem, Typography } from "@mui/material"
+import { Grid, List, ListItem, Typography } from "@mui/material"
 import { SearchBar } from "./SearchBar"
 import { useState } from "react";
 

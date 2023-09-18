@@ -13,6 +13,13 @@ param environmentName string
 @description('Primary location for all resources')
 param location string
 
+param clientId string
+param tenantId string
+param instance string
+param swaggerClientId string
+param audience string
+param scopes string
+
 var abbrs = loadJsonContent('./abbreviations.json')
 
 // Name of the service defined in azure.yaml
@@ -102,6 +109,16 @@ module api './core/host/appservice.bicep' = {
     runtimeName: 'dotnetcore'
     runtimeVersion: '7.0'
     scmDoBuildDuringDeployment: false
+    appSettings: {
+      AzureAd: {
+        ClientId: clientId
+        TenantId: tenantId
+        Instance: instance
+        SwaggerClientId: swaggerClientId
+        Audience: audience
+        Scopes: scopes
+      }
+    }
   }
 }
 
