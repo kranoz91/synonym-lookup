@@ -78,3 +78,9 @@ app.MapSynonymReader();
 app.MapSynonymWriter();
 
 app.Run();
+
+/// <summary>
+/// This public partial class of "Program" is used to access "Program" in integration tests.
+/// </summary>
+public partial class Program
+{ }
