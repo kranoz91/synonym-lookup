@@ -28,3 +28,7 @@ services:
     project: ./src/web
     host: staticwebapp
     dist: build
+  app-synonym-lookup:
+    language: dotnet
+    project: ./src/api/src/SynonymLookup.Api
+    host: appservice

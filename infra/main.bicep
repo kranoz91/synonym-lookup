@@ -72,7 +72,36 @@ module apimApi './app/apim-api.bicep' = {
     apiDescription: 'CRUD for words and their synonyms'
     apiPath: 'words'
     webFrontendUrl: staticWebApp.outputs.uri
-    apiBackendUrl: 'https://placeholder.com'
+    apiBackendUrl: api.outputs.uri
+    apiAppName: api.outputs.name
+  }
+}
+
+module appServicePlan './core/host/appserviceplan.bicep' = {
+  name: 'appserviceplan'
+  scope: rg
+  params: {
+    name: '${abbrs.webServerFarms}${serviceName}-${environmentName}'
+    location: location
+    tags: tags
+    sku: {
+      name: 'B1'
+    }
+  }
+}
+
+module api './core/host/appservice.bicep' = {
+  name: '${serviceName}-app-module'
+  scope: rg
+  params: {
+    name: '${abbrs.webSitesAppService}${serviceName}'
+    location: location
+    tags: union(tags, { 'azd-service-name': '${abbrs.webSitesAppService}${serviceName}' })
+    applicationInsightsName: monitoring.outputs.applicationInsightsName
+    appServicePlanId: appServicePlan.outputs.id
+    runtimeName: 'dotnetcore'
+    runtimeVersion: '7.0'
+    scmDoBuildDuringDeployment: false
   }
 }
 
