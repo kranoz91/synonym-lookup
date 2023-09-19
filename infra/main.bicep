@@ -14,7 +14,6 @@ param environmentName string
 param location string
 
 param clientId string
-param tenantId string
 param instance string
 param swaggerClientId string
 param audience string
