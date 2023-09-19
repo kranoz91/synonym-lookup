@@ -19,7 +19,7 @@ components:
     createWord:
       type: object
       properties:
-        value:
+        word:
           type: string
         synonyms:
           type: array

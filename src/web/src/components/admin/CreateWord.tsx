@@ -29,7 +29,7 @@ export const CreateWord = (Props: CreateWordProps) => {
                     searchWithLocation(location)
                         .then(synonyms => {
                             var newState: SharedState = {
-                                LatestSearch: word.value,
+                                LatestSearch: word.word,
                                 Synonyms: synonyms
                             };
 
