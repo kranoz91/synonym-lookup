@@ -16,7 +16,8 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 export interface SearchBarProps {
     HandleChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
     HandleSearch: (event: React.MouseEvent<HTMLButtonElement>) => void,
-    Searching: boolean
+    Searching: boolean,
+    SearchString: string
 }
 
 export const SearchBar = (Props: SearchBarProps) => {
@@ -26,7 +27,9 @@ export const SearchBar = (Props: SearchBarProps) => {
                 type="search"
                 placeholder="Search..."
                 className="me-2"
-                aria-label="Search" />
+                aria-label="Search"
+                onChange={Props.HandleChange}
+                value={Props.SearchString} />
             {Props.Searching ? (
                 <CircularProgress />
             ) : (

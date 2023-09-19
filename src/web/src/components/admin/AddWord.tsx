@@ -3,7 +3,7 @@ import { TextField, Button, List, ListItem, ListItemText, ListItemSecondaryActio
 import DeleteIcon from '@mui/icons-material/Delete';
 
 export interface Word {
-  word: string;
+  value: string;
   synonyms: string[];
 }
 
@@ -30,7 +30,7 @@ const AddWord = ({ onAddWord }: AddWordProps) => {
 
   const handleAddWord = () => {
     const wordData: Word = {
-      word: newWord,
+      value: newWord,
       synonyms: synonymsList,
     };
 

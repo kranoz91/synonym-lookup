@@ -42,6 +42,7 @@ paths:
           description: Created result with Location header
           headers:
             Location:
+              description: Relative path to newly created word
               schema:
                 type: string
                 format: url

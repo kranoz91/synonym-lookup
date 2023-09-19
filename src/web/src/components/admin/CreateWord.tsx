@@ -1,7 +1,8 @@
+import { SharedState } from "../../App";
 import AddWord, { Word } from "./AddWord";
 
 export interface CreateWordProps {
-    Callback: (synonyms: string[]) => void
+    UpdateState: (newState: SharedState) => void
 }
 
 export const CreateWord = (Props: CreateWordProps) => {
@@ -27,7 +28,12 @@ export const CreateWord = (Props: CreateWordProps) => {
                 if (location !== "") {
                     searchWithLocation(location)
                         .then(synonyms => {
-                            Props.Callback(synonyms);
+                            var newState: SharedState = {
+                                LatestSearch: word.value,
+                                Synonyms: synonyms
+                            };
+
+                            Props.UpdateState(newState);
                         });
                 }
             })

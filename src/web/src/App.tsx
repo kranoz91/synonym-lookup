@@ -8,11 +8,16 @@ import { PageLayout } from './components/layout/PageLayout';
 import { CreateWord } from './components/admin/CreateWord';
 import { Search } from './components/search/Search';
 
-const MainContent = () => {
-  const [synonyms, setSynonyms] = useState(['']);
+export interface SharedState {
+  Synonyms: string[],
+  LatestSearch: string
+}
 
-  function updateSynonyms(synonyms: string[]) {
-      setSynonyms(synonyms);
+const MainContent = () => {
+  const [sharedState, setSharedState] = useState<SharedState>({Synonyms: [""], LatestSearch: ""});
+
+  function updateState(newState: SharedState) {
+      setSharedState(newState);
   }
 
   return (
@@ -21,19 +26,19 @@ const MainContent = () => {
         <AuthenticatedTemplate>
           <Grid item xs={12} md={6} lg={6}>
             <Paper sx={{ p: 2 }}>
-              <CreateWord Callback={updateSynonyms}/>
+              <CreateWord UpdateState={updateState}/>
             </Paper>
           </Grid>
           <Grid item xs={12} md={6} lg={6}>
             <Paper sx={{ p: 2 }}>
-              <Search Synonyms={synonyms} Callback={updateSynonyms}/>
+              <Search State={sharedState} UpdateState={updateState}/>
             </Paper>
           </Grid>
         </AuthenticatedTemplate>
         <UnauthenticatedTemplate>
         <Grid item xs={8}>
             <Paper sx={{ p: 2 }}>
-              <Search Synonyms={synonyms} Callback={updateSynonyms}/>
+              <Search State={sharedState} UpdateState={updateState}/>
             </Paper>
           </Grid>
         </UnauthenticatedTemplate>

@@ -1,16 +1,16 @@
 import { Grid, List, ListItem, Typography } from "@mui/material"
 import { SearchBar } from "./SearchBar"
 import { useState } from "react";
+import { SharedState } from "../../App";
 
 export interface SearchProps {
-    Synonyms: string[],
-    Callback: (synonyms: string[]) => void
+    State: SharedState,
+    UpdateState: (newState: SharedState) => void
 }
 
 export const Search = (Props: SearchProps) => {
     const [searchString, setSearchString] = useState('');
     const [searching, setSearching] = useState(false);
-    const [latestSearch, setLatestSearch] = useState('');
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchString(event.target.value);
@@ -38,9 +38,13 @@ export const Search = (Props: SearchProps) => {
         event.preventDefault();
         search()
             .then(synonyms => {
-                Props.Callback(synonyms);
+                var newState: SharedState = {
+                    LatestSearch: searchString,
+                    Synonyms: synonyms
+                };
+
+                Props.UpdateState(newState);
                 setSearching(false);
-                setLatestSearch(searchString);
                 setSearchString('');
             })
     }
@@ -48,15 +52,15 @@ export const Search = (Props: SearchProps) => {
     return (
         <Grid container>
             <Grid item xs={12}>
-                <SearchBar HandleChange={handleChange} HandleSearch={handleSearch} Searching={searching}/>
+                <SearchBar HandleChange={handleChange} HandleSearch={handleSearch} Searching={searching} SearchString={searchString}/>
             </Grid>
-            {latestSearch !== '' ? (
+            {Props.State.LatestSearch !== '' ? (
                 <Grid item xs={12}>
                     <List>
                         <ListItem divider>
-                            <Typography component="span">Synonyms for <Typography component="span" sx={{ fontWeight: "bold" }}>{searchString}</Typography></Typography>
+                            <Typography component="span">Synonyms for <Typography component="span" sx={{ fontWeight: "bold" }}>{Props.State.LatestSearch}</Typography></Typography>
                         </ListItem>
-                        {Props.Synonyms.map((synonym, i) => {
+                        {Props.State.Synonyms.map((synonym, i) => {
                             return (
                                 <ListItem>
                                     <Typography>{synonym}</Typography>

@@ -1,0 +1,21 @@
+<policies>
+    <inbound>
+        <base />
+        <return-response>
+            <set-status code="201" reason="Created" />
+            <set-header name="Location" exists-action="override">
+                <value>/v1/words/test/synonyms</value>
+            </set-header>
+            <set-body />
+        </return-response>
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

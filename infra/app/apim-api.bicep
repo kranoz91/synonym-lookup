@@ -53,6 +53,38 @@ resource apiPolicy 'Microsoft.ApiManagement/service/apis/policies@2021-12-01-pre
   }
 }
 
+resource postWord 'Microsoft.ApiManagement/service/apis/operations@2023-03-01-preview' existing = {
+  name: 'PostWord'
+  parent: restApi
+}
+
+var postWordPolicyContent = loadTextContent('./apim-api-post-word-policy.xml')
+
+resource postWordPolicies 'Microsoft.ApiManagement/service/apis/operations/policies@2023-03-01-preview' = {
+  name: 'policy'
+  parent: postWord
+  properties: {
+    format: 'rawxml'
+    value: postWordPolicyContent
+  }
+}
+
+resource getSynonyms 'Microsoft.ApiManagement/service/apis/operations@2023-03-01-preview' existing = {
+  name: 'GetSynonyms'
+  parent: restApi
+}
+
+var getSynonymsPolicyContent = loadTextContent('./apim-api-get-synonyms-policy.xml')
+
+resource getSynonymsPolicies 'Microsoft.ApiManagement/service/apis/operations/policies@2023-03-01-preview' = {
+  name: 'policy'
+  parent: getSynonyms
+  properties: {
+    format: 'rawxml'
+    value: getSynonymsPolicyContent
+  }
+}
+
 resource apiDiagnostics 'Microsoft.ApiManagement/service/apis/diagnostics@2021-12-01-preview' = {
   name: 'applicationinsights'
   parent: restApi

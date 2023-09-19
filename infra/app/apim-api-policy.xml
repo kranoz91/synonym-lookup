@@ -33,7 +33,6 @@
             <metadata name="Host" value="@(context.Request.Url.Host)" />
             <metadata name="Path" value="@(context.Request.Url.Path)" />
         </trace>
-        <mock-response status-code="200" content-type="application/json" />
     </inbound>
     <backend>
         <limit-concurrency key="@(context.Request.IpAddress)" max-count="3">
