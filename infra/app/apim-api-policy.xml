@@ -69,12 +69,10 @@
         <!-- Optional policy to handle errors. Learn more at https://learn.microsoft.com/en-us/azure/api-management/api-management-error-handling-policies -->
         <trace source="@(context.Api.Name)" severity="error">
             <message>Failed to process the @(context.Api.Name)</message>
-            <metadata name="User-Agent" value="@(context.Request.Headers.GetValueOrDefault("User-Agent",""))" />
             <metadata name="Operation Method" value="@(context.Request.Method)" />
             <metadata name="Host" value="@(context.Request.Url.Host)" />
             <metadata name="Path" value="@(context.Request.Url.Path)" />
             <metadata name="Error Reason" value="@(context.LastError.Reason)" />
-            <metadata name="Error Message" value="@(context.LastError.Message)" />
         </trace>
         <emit-metric name="Failed requests" value="1" namespace="apim-metrics">
             <dimension name="API" value="@(context.Api.Name)" />
@@ -83,10 +81,5 @@
             <dimension name="Status Reason" value="@(context.LastError.Reason)" />
             <dimension name="Error Source" value="gateway" />
         </emit-metric>
-        <!-- Optional policy to hide error details and provide a custom generic message. Learn more at https://learn.microsoft.com/en-us/azure/api-management/api-management-advanced-policies#ReturnResponse -->
-        <return-response>
-            <set-status code="500" reason="Internal Server Error" />
-            <set-body>An unexpected error has occurred.</set-body>
-        </return-response>
     </on-error>
 </policies>
