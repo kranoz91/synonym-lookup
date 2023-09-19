@@ -1,11 +1,16 @@
 import { SharedState } from "../../App";
+import { ResolveError, isProblemDetails } from "../../problemDetails";
 import AddWord, { Word } from "./AddWord";
+import { Error } from "../../problemDetails";
+import { useState } from "react";
 
 export interface CreateWordProps {
     UpdateState: (newState: SharedState) => void
 }
 
 export const CreateWord = (Props: CreateWordProps) => {
+    const [error, setError] = useState<Error|undefined>(undefined);
+
     function create(word: Word): Promise<string> {
         const headers: Headers = new Headers()
     
@@ -19,7 +24,19 @@ export const CreateWord = (Props: CreateWordProps) => {
         })
     
         return fetch(request)
-          .then(res => res.headers.get("Location") ?? "")
+            .then(res => {
+                if (res.status !== 201) {
+                    res.json().then(json => {
+                        if (isProblemDetails(json)) {
+                            setError(ResolveError(json));
+                            return "";
+                        }
+                    })
+                }
+                
+                setError(undefined);
+                return res.headers.get("Location") ?? "";
+            })
     }
     
     const handleCreate = (word: Word) => {
@@ -56,6 +73,6 @@ export const CreateWord = (Props: CreateWordProps) => {
     }
 
     return (
-        <AddWord onAddWord={handleCreate}/>
+        <AddWord onAddWord={handleCreate} error={error}/>
     )
 }

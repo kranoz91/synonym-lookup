@@ -2,6 +2,7 @@ import { Grid, List, ListItem, Typography } from "@mui/material"
 import { SearchBar } from "./SearchBar"
 import { useState } from "react";
 import { SharedState } from "../../App";
+import { Error, ResolveError, isProblemDetails } from "../../problemDetails";
 
 export interface SearchProps {
     State: SharedState,
@@ -11,6 +12,7 @@ export interface SearchProps {
 export const Search = (Props: SearchProps) => {
     const [searchString, setSearchString] = useState('');
     const [searching, setSearching] = useState(false);
+    const [error, setError] = useState<Error|undefined>(undefined);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchString(event.target.value);
@@ -31,7 +33,15 @@ export const Search = (Props: SearchProps) => {
     
         return fetch(request)
             .then(res => res.json())
-            .then(res => res as string[])
+            .then(res => {
+                if (isProblemDetails(res)) {
+                    setError(ResolveError(res));
+                    return [];
+                }
+                
+                setError(undefined);
+                return res as string[];
+            })
     }
 
     const handleSearch = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -55,20 +65,35 @@ export const Search = (Props: SearchProps) => {
                 <SearchBar HandleChange={handleChange} HandleSearch={handleSearch} Searching={searching} SearchString={searchString}/>
             </Grid>
             {Props.State.LatestSearch !== '' ? (
-                <Grid item xs={12}>
-                    <List>
-                        <ListItem divider>
-                            <Typography component="span">Synonyms for <Typography component="span" sx={{ fontWeight: "bold" }}>{Props.State.LatestSearch}</Typography></Typography>
-                        </ListItem>
-                        {Props.State.Synonyms.map((synonym, i) => {
-                            return (
-                                <ListItem>
-                                    <Typography>{synonym}</Typography>
-                                </ListItem>
-                            )
-                        })}
-                    </List>
-                </Grid>
+                error !== undefined ? (
+                    <Typography p={2}>{error.message}</Typography>
+                ) : (
+                    <Grid item xs={12}>
+                        <List>
+                            <ListItem divider>
+                                <Typography
+                                    variant="h5"
+                                    component="span"
+                                >
+                                    Synonyms for <Typography
+                                        variant="h5"
+                                        component="span"
+                                        sx={{ fontWeight: "bold", fontStyle: "italic" }}
+                                    >
+                                        {Props.State.LatestSearch}
+                                    </Typography>
+                                </Typography>
+                            </ListItem>
+                            {Props.State.Synonyms.map((synonym, i) => {
+                                return (
+                                    <ListItem>
+                                        <Typography>{synonym}</Typography>
+                                    </ListItem>
+                                )
+                            })}
+                        </List>
+                    </Grid>
+                )
             ) : <></>}
         </Grid>
     )

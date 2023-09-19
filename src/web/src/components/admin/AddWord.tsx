@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Typography, Paper, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Error } from '../../problemDetails';
 
 export interface Word {
   word: string;
@@ -8,10 +9,11 @@ export interface Word {
 }
 
 interface AddWordProps {
-  onAddWord: (word: Word) => void;
+  onAddWord: (word: Word) => void,
+  error: Error|undefined
 }
 
-const AddWord = ({ onAddWord }: AddWordProps) => {
+const AddWord = ({ onAddWord, error }: AddWordProps) => {
   const [newWord, setNewWord] = useState<string>('');
   const [synonyms, setSynonyms] = useState<string>('');
   const [synonymsList, setSynonymsList] = useState<string[]>([]);
@@ -45,32 +47,35 @@ const AddWord = ({ onAddWord }: AddWordProps) => {
   return (
     <Paper elevation={3} sx={{ padding: '16px' }}>
       <Typography variant="h5">Add a New Word</Typography>
+      {error !== undefined ? (
+        <Typography sx={{color: 'red'}}>{error.message}</Typography>
+      ): <></>}
       <TextField
-        label="Word"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={newWord}
-        onChange={(e) => setNewWord(e.target.value)}
-      />
-      <Box style={{ display: 'flex', alignItems: 'center' }}>
-        <TextField
-          label="Synonyms"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={synonyms}
-          onChange={(e) => setSynonyms(e.target.value)}
+            label="Word"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={newWord}
+            onChange={(e) => setNewWord(e.target.value)}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAddSynonym}
-          sx={{ marginLeft: '8px', marginBottom: '8px', marginTop: '16px', height: '100%', fontSize: '0.78rem' }}
-        >
-          Add Synonym
-        </Button>
-      </Box>
+        <Box style={{ display: 'flex', alignItems: 'center' }}>
+            <TextField
+                label="Synonyms"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={synonyms}
+                onChange={(e) => setSynonyms(e.target.value)}
+            />
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddSynonym}
+                sx={{ marginLeft: '8px', marginBottom: '8px', marginTop: '16px', height: '100%', fontSize: '0.78rem' }}
+            >
+                Add Synonym
+            </Button>
+        </Box>
       <List>
         {synonymsList.map((synonym, index) => (
           <ListItem key={index}>

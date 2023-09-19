@@ -9,7 +9,7 @@ internal static class Errors
 {
     internal const string SL201 = "Input words can not be empty.";
     internal static readonly string SL202 = $"Words can not exceed the maximum of {WordValidator.MAX_LENGTH} characters.";
-    internal const string SL203 = "Words can only consist of letters A to Z.";
+    internal const string SL203 = "Words can only consist of letters A to Ö.";
 
     internal static readonly Dictionary<string, ProblemDetails> PredefinedErrors = new()
     {
