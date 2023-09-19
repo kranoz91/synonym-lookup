@@ -110,14 +110,12 @@ module api './core/host/appservice.bicep' = {
     runtimeVersion: '7.0'
     scmDoBuildDuringDeployment: false
     appSettings: {
-      AzureAd: {
-        ClientId: clientId
-        TenantId: tenantId
-        Instance: instance
-        SwaggerClientId: swaggerClientId
-        Audience: audience
-        Scopes: scopes
-      }
+      AzureAd__ClientId: clientId
+      AzureAd__TenantId: tenantId
+      AzureAd__Instance: instance
+      AzureAd__SwaggerClientId: swaggerClientId
+      AzureAd__Audience: audience
+      AzureAd__Scopes: scopes
     }
   }
 }
