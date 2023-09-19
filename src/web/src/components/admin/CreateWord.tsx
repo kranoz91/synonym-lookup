@@ -3,7 +3,8 @@ import { ResolveError, isProblemDetails } from "../../problemDetails";
 import AddWord, { Word } from "./AddWord";
 import { Error } from "../../problemDetails";
 import { useState } from "react";
-import useFetchWithMsal from "../../hooks/useFetchWithMsal";
+import { useMsal } from "@azure/msal-react";
+import { AccountInfo } from "@azure/msal-browser";
 import { protectedResources } from "../../authConfig";
 
 export interface CreateWordProps {
@@ -12,18 +13,36 @@ export interface CreateWordProps {
 
 export const CreateWord = (Props: CreateWordProps) => {
     const [error, setError] = useState<Error|undefined>(undefined);
-    
-    const { execute } = useFetchWithMsal({
-        scopes: protectedResources.synonymLookupAPI.scopes.write
-    });
+    const { instance } = useMsal();
+
+    let activeAccount: AccountInfo|null;
+
+    if (instance) {
+        activeAccount = instance.getActiveAccount();
+    }
 
     function create(word: Word): Promise<string> {
-        return execute('POST', 'https://apim-synonym-lookup-dev.azure-api.net/words/v1/words/', word)
-            .then(res => {
-                if (res === undefined) {
-                    return "";
-                }
+        const headers: Headers = new Headers()
 
+        headers.set('Content-Type', 'application/json')
+        headers.set('Accept', 'application/json')
+        if (activeAccount) {
+            instance
+                .acquireTokenSilent({scopes: protectedResources.synonymLookupAPI.scopes.write, account: activeAccount})
+                .then((accessTokenResponse) => {
+                    let accessToken = accessTokenResponse.accessToken;
+                    headers.set('Authorization', 'Bearer ' + accessToken);
+                })
+        }
+
+        const request: RequestInfo = new Request('https://apim-synonym-lookup-dev.azure-api.net/words/v1/words/', {
+          method: 'POST',
+          body: JSON.stringify(word),
+          headers: headers
+        })
+
+        return fetch(request)
+            .then(res => {
                 if (res.status !== 201) {
                     res.json().then(json => {
                         if (isProblemDetails(json)) {
