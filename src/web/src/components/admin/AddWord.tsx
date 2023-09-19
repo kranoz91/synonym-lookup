@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { TextField, Button, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Typography, Paper, Box } from '@mui/material';
+import { useState } from 'react';
+import { TextField, Button, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Typography, Paper, Box, CircularProgress } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Error } from '../../problemDetails';
+import AddIcon from '@mui/icons-material/Add';
 
 export interface Word {
   word: string;
@@ -10,10 +11,11 @@ export interface Word {
 
 interface AddWordProps {
   onAddWord: (word: Word) => void,
-  error: Error|undefined
+  error: Error|undefined,
+  creating: boolean
 }
 
-const AddWord = ({ onAddWord, error }: AddWordProps) => {
+const AddWord = ({ onAddWord, error, creating }: AddWordProps) => {
   const [newWord, setNewWord] = useState<string>('');
   const [synonyms, setSynonyms] = useState<string>('');
   const [synonymsList, setSynonymsList] = useState<string[]>([]);
@@ -68,12 +70,11 @@ const AddWord = ({ onAddWord, error }: AddWordProps) => {
                 onChange={(e) => setSynonyms(e.target.value)}
             />
             <Button
-                variant="contained"
-                color="primary"
+                color="inherit"
                 onClick={handleAddSynonym}
                 sx={{ marginLeft: '8px', marginBottom: '8px', marginTop: '16px', height: '100%', fontSize: '0.78rem' }}
             >
-                Add Synonym
+                <AddIcon />
             </Button>
         </Box>
       <List>
@@ -92,14 +93,20 @@ const AddWord = ({ onAddWord, error }: AddWordProps) => {
           </ListItem>
         ))}
       </List>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleAddWord}
-        fullWidth
-      >
-        Add Word
-      </Button>
+        {creating ? (
+            <CircularProgress sx={{ height: '2.5rem'}}/>
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddWord}
+              fullWidth
+              sx={{ height: '2.5rem'}}
+            >
+              Submit
+            </Button>
+          )
+        }
     </Paper>
   );
 };

@@ -13,6 +13,7 @@ export interface CreateWordProps {
 
 export const CreateWord = (Props: CreateWordProps) => {
     const [error, setError] = useState<Error|undefined>(undefined);
+    const [creating, setCreating] = useState(false);
     const { instance } = useMsal();
 
     let activeAccount: AccountInfo|null;
@@ -37,6 +38,8 @@ export const CreateWord = (Props: CreateWordProps) => {
           body: JSON.stringify(word),
           headers: headers
         })
+
+        setCreating(true);
 
         return fetch(request)
             .then(res => {
@@ -66,8 +69,12 @@ export const CreateWord = (Props: CreateWordProps) => {
                             };
 
                             Props.UpdateState(newState);
+
+                            setCreating(false);
                         });
                 }
+
+                setCreating(false);
             })
     }
 
@@ -88,6 +95,6 @@ export const CreateWord = (Props: CreateWordProps) => {
     }
 
     return (
-        <AddWord onAddWord={handleCreate} error={error}/>
+        <AddWord onAddWord={handleCreate} error={error} creating={creating}/>
     )
 }

@@ -25,9 +25,7 @@ const MainContent = () => {
       <Grid container maxWidth="lg" spacing={3} sx={{justifyContent: "center"}}>
         <AuthenticatedTemplate>
           <Grid item xs={12} md={6} lg={6}>
-            <Paper sx={{ p: 2 }}>
-              <CreateWord UpdateState={updateState}/>
-            </Paper>
+            <CreateWord UpdateState={updateState}/>
           </Grid>
           <Grid item xs={12} md={6} lg={6}>
             <Paper sx={{ p: 2 }}>
