@@ -29,7 +29,6 @@
         <!-- Optional policy to send custom trace telemetry to Application Insights. Learn more at https://learn.microsoft.com/en-us/azure/api-management/api-management-advanced-policies#Trace -->
         <trace source="@(context.Api.Name)" severity="verbose">
             <message>Call to the @(context.Api.Name)</message>
-            <metadata name="User-Agent" value="@(context.Request.Headers.GetValueOrDefault("User-Agent",""))" />
             <metadata name="Operation Method" value="@(context.Request.Method)" />
             <metadata name="Host" value="@(context.Request.Url.Host)" />
             <metadata name="Path" value="@(context.Request.Url.Path)" />
