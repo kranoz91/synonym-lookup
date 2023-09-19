@@ -8,6 +8,17 @@
             </set-header>
             <set-body />
         </return-response> -->
+        <validate-azure-ad-token tenant-id="{{tenantId}}">
+            <client-application-ids>
+                <application-id>{{webClientId}}</application-id>
+            </client-application-ids>
+            <backend-application-ids>
+                <application-id>{{backendClientId}}</application-id>
+            </backend-application-ids>
+            <audiences>
+                <audience>{{audience}}</audience>
+            </audiences>
+        </validate-azure-ad-token>
     </inbound>
     <backend>
         <base />

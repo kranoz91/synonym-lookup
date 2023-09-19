@@ -66,6 +66,9 @@ module apim './core/gateway/apim.bicep' = {
     location: location
     tags: tags
     applicationInsightsName: monitoring.outputs.applicationInsightsName
+    webClientId: swaggerClientId
+    backendClientId: clientId
+    audience: audience
   }
 }
 
@@ -111,7 +114,7 @@ module api './core/host/appservice.bicep' = {
     scmDoBuildDuringDeployment: false
     appSettings: {
       AzureAd__ClientId: clientId
-      AzureAd__TenantId: tenantId
+      AzureAd__TenantId: tenant().tenantId
       AzureAd__Instance: instance
       AzureAd__SwaggerClientId: swaggerClientId
       AzureAd__Audience: audience

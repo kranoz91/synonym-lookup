@@ -27,6 +27,10 @@ param skuCount int = 0
 @description('Azure Application Insights Name')
 param applicationInsightsName string
 
+param webClientId string
+param backendClientId string
+param audience string
+
 resource apimService 'Microsoft.ApiManagement/service@2021-08-01' = {
   name: name
   location: location
@@ -58,18 +62,76 @@ resource apimService 'Microsoft.ApiManagement/service@2021-08-01' = {
   }
 }
 
+resource namedValueAppInsightsKey 'Microsoft.ApiManagement/service/namedValues@2020-06-01-preview' = if (!empty(applicationInsightsName)) {
+  name: 'appinsights-key'
+  parent: apimService
+  properties: {
+    tags: []
+    secret: false
+    displayName: 'appinsights-key'
+    value: applicationInsights.properties.InstrumentationKey
+  }
+}
+
+resource namedValueTenantId 'Microsoft.ApiManagement/service/namedValues@2020-06-01-preview' = {
+  name: 'tenantId-namedValue'
+  parent: apimService
+  properties: {
+    tags: []
+    secret: false
+    displayName: 'tenantId'
+    value: tenant().tenantId
+  }
+}
+
+resource namedValueWebClientId 'Microsoft.ApiManagement/service/namedValues@2020-06-01-preview' = {
+  name: 'webClientId-namedValue'
+  parent: apimService
+  properties: {
+    tags: []
+    secret: false
+    displayName: 'webClientId'
+    value: webClientId
+  }
+}
+
+resource namedValueAudience 'Microsoft.ApiManagement/service/namedValues@2020-06-01-preview' = {
+  name: 'audience-namedValue'
+  parent: apimService
+  properties: {
+    tags: []
+    secret: false
+    displayName: 'audience'
+    value: audience
+  }
+}
+
+resource namedValueBackendClientId 'Microsoft.ApiManagement/service/namedValues@2020-06-01-preview' = {
+  name: 'backendClientId-namedValue'
+  parent: apimService
+  properties: {
+    tags: []
+    secret: false
+    displayName: 'backendClientId'
+    value: backendClientId
+  }
+}
+
 resource apimLogger 'Microsoft.ApiManagement/service/loggers@2021-12-01-preview' = if (!empty(applicationInsightsName)) {
   name: 'app-insights-logger'
   parent: apimService
   properties: {
     credentials: {
-      instrumentationKey: applicationInsights.properties.InstrumentationKey
+      instrumentationKey: '{{appinsights-key}}'
     }
     description: 'Logger to Azure Application Insights'
     isBuffered: false
     loggerType: 'applicationInsights'
     resourceId: applicationInsights.id
   }
+  dependsOn:  [
+    namedValueAppInsightsKey
+  ]
 }
 
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' existing = if (!empty(applicationInsightsName)) {

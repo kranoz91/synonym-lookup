@@ -11,9 +11,6 @@
       "clientId": {
         "value": "1565ceb2-0d34-49a9-b8f3-cc8d554eb1da"
       },
-      "tenantId": {
-        "value": "ddfdb3ce-7b6d-4c50-9441-fd4f49b01e6f"
-      },
       "instance": {
         "value": "https://login.microsoftonline.com/"
       },

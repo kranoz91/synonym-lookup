@@ -21,18 +21,15 @@ export const CreateWord = (Props: CreateWordProps) => {
         activeAccount = instance.getActiveAccount();
     }
 
-    function create(word: Word): Promise<string> {
+    async function create(word: Word): Promise<string> {
         const headers: Headers = new Headers()
 
         headers.set('Content-Type', 'application/json')
         headers.set('Accept', 'application/json')
         if (activeAccount) {
-            instance
-                .acquireTokenSilent({scopes: protectedResources.synonymLookupAPI.scopes.write, account: activeAccount})
-                .then((accessTokenResponse) => {
-                    let accessToken = accessTokenResponse.accessToken;
-                    headers.set('Authorization', 'Bearer ' + accessToken);
-                })
+            let response = await instance.acquireTokenSilent({scopes: protectedResources.synonymLookupAPI.scopes.write, account: activeAccount});
+            let accessToken = response.accessToken;
+            headers.set('Authorization', 'Bearer ' + accessToken);
         }
 
         const request: RequestInfo = new Request('https://apim-synonym-lookup-dev.azure-api.net/words/v1/words/', {
