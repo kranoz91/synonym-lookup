@@ -47,6 +47,19 @@ Tests are written, both unit- and integrationtests.
 
 Data is handled in-memory.
 
+### Create Word Logic
+
+When creating a new word with synonyms, we lookup all of the existing words and combine them with new words to create a new group which replaces the old group(s).
+
+1. Identify if word is new or exists.
+2. Identify if synonyms are new or exists.
+3. Get words from groups connected to existing word and/or synonyms.
+4. Combine existing with the new into a new group.
+5. Update mapping between word and group.
+6. Delete old groups.
+
+![CreateWordCommand](./assets/CreateWordCommand.png)
+
 ## React Web
 
 The React Web application is mainly using Material UI with some parts from Bootstrap for styling, it uses MSAL for login and authentication against API. It is built with Typescript.
