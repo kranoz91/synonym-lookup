@@ -11,24 +11,23 @@ export const NavigationBar = () => {
         activeAccount = instance.getActiveAccount();
     }
 
-    const handleLoginPopup = () => {
+    const handleLoginRedirect = () => {
         /**
          * When using popup and silent APIs, we recommend setting the redirectUri to a blank page or a page
          * that does not implement MSAL. Keep in mind that all redirect routes must be registered with the application
          * For more information, please follow this link: https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/login-user.md#redirecturi-considerations
          */
         instance
-            .loginPopup({
+            .loginRedirect({
                 ...loginRequest,
                 redirectUri: '/',
             })
             .catch((error) => console.log(error));
     };
 
-    const handleLogoutPopup = () => {
+    const handleLogoutRedirect = () => {
         instance
-            .logoutPopup({
-                mainWindowRedirectUri: '/', // redirects the top level app after logout
+            .logoutRedirect({
                 account: instance.getActiveAccount(),
             })
             .catch((error) => console.log(error));
@@ -52,15 +51,15 @@ export const NavigationBar = () => {
                             drop="start"
                             title={activeAccount ? activeAccount.name : 'Unknown'}
                         >
-                            <Dropdown.Item as="button" onClick={handleLogoutPopup}>
-                                Sign out using Popup
+                            <Dropdown.Item as="button" onClick={handleLogoutRedirect}>
+                                Sign out using Redirect
                             </Dropdown.Item>
                         </DropdownButton>
                     </div>
                 </AuthenticatedTemplate>
                 <UnauthenticatedTemplate>
                     <div className="collapse navbar-collapse justify-content-end">
-                        <Button variant="secondary" className="justify-content-end ml-auto" onClick={handleLoginPopup}>
+                        <Button variant="secondary" className="justify-content-end ml-auto" onClick={handleLoginRedirect}>
                             Sign in
                         </Button>
                     </div>
