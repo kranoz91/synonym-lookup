@@ -1,46 +1,62 @@
-# Getting Started with Create React App
+# Synonym Lookup
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This application features the following public capabilities:
+* Search for a word and get their synonyms.
 
-## Available Scripts
+With elevated permissions, you can also access these capabilities:
+* Add a word with synonyms.
 
-In the project directory, you can run:
+The project is built with the following main frameworks, languages, packages and patterns:
+- Bicep: To define infrastructure as code.
+- Github Actions: To define pipeline as code in YAML.
+- .NET Core 7.0
+- C#
+- React
+- Typescript
+- API-first: using OpenAPI.yaml
+- Material UI: NPM package
+- Bootstrap: NPM package
+- MSAL: Authentication Library from MS, used in both React application and API.
+- PKCE: Proof Key for Code Exchange (https://oauth.net/2/pkce/)
+- MediatR: Nuget package used to implement the Mediator pattern in the API.
+- FluentValidation: Nuget package used to validate input model when creating a new word in the API.
+- XUnit: Test framework for Unit- and Integration tests in the API.
+- FluentAssertions: Nuget package used to create more readable assertions in tests.
+- AZD CLI: https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/overview
 
-### `npm start`
+## Infrastructure
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+![ContextDiagram](./assets/ContextDiagram.png)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+The infrastructure in Azure that was used:
+- Azure Static Web App
+- API Management
+- App Service
+- App Service Plan
+- Application Insights
+- Log Analytics Workspace
+- Azure AD
 
-### `npm test`
+## .NET API
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The API is built using .NET Core 7.0 and uses minimal APIs coupled with vertical slices architecture and the mediator pattern for loosely coupled dependencies.
 
-### `npm run build`
+Validation is done with FluentValidation on the input model when posting a new word.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Tests are written, both unit- and integrationtests.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Data is handled in-memory.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## React Web
 
-### `npm run eject`
+The React Web application is mainly using Material UI with some parts from Bootstrap for styling, it uses MSAL for login and authentication against API. It is built with Typescript.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+![ReactWeb](./assets/ReactWeb.png)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## API Management
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+API Management is setup through automation using Bicep together with Policies in XML files and an OpenAPI.yaml file to deploy the API to the API Management instance.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Something to note here is that there is an inbound policy which validates the JWT token when posting a new word. This will prevent unauthorized calls from reaching the backend server thus adding unnecessary load.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Policies, named values, API and logger is automatically setup via Bicep-, XML- and YAML files.
